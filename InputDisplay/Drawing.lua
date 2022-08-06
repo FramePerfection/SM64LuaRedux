@@ -103,13 +103,11 @@ function Drawing.drawAnalogStick(x, y)
 	wgui.setpen("#777777") -- crosshairs
 	wgui.line(x-r, y, x+r, y)
 	wgui.line(x, y-r, x, y+r)
-	wgui.setpen("#00dcbf") -- stick colour #old: #0068E6
+	wgui.setpen("#00dcbf", 3) -- stick colour #old: #0068E6
 	wgui.line(x, y, x + Joypad.input.X*r/m, y - Joypad.input.Y*r/m)
-	wgui.line(x - 0.7, y - 0.7, x + Joypad.input.X*r/m - 0.7, y - Joypad.input.Y*r/m - 0.7)
-	wgui.line(x + 0.7, y + 0.7, x + Joypad.input.X*r/m + 0.7, y - Joypad.input.Y*r/m + 0.7)
 	wgui.setpen("#FF0000") -- end of the stick
 	wgui.setbrush("#FF0000")
-	wgui.ellipse(x-4 + Joypad.input.X*r/m, y-4 - Joypad.input.Y*r/m, x+4 + Joypad.input.X*r/m, y+4 - Joypad.input.Y*r/m)
+	wgui.ellipse(x-3 + Joypad.input.X*r/m, y-3 - Joypad.input.Y*r/m, x+4 + Joypad.input.X*r/m, y+4 - Joypad.input.Y*r/m)
 	wgui.setpen(TEXT_COLOUR) -- coords
 	wgui.setfont(13,"Arial","")
 	local x_offset = 6

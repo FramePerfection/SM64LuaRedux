@@ -12,7 +12,8 @@ Numbers will always edit value fields, and arrow keys
 arrow keys will always change selected digits in value fields.
 For a list of valid keys (case-sensitive) see:
   https://docs.google.com/document/d/1SWd-oAFBKsGmwUs0qGiOrk3zfX9wYHhi3x5aKPQS_o0/edit#bookmark=id.jcojkq7g066s
-]]--
+]]
+--
 Settings.Hotkeys = {
 	["dist moved"] = {},
 	["ignore y"] = {},
@@ -29,22 +30,22 @@ Settings.Hotkeys = {
 	["match angle"] = {},
 	["match angle value"] = {},
 	["dyaw"] = {},
-	
+
 	["arcotan strain"] = {},
 	["reverse arcotan strain"] = {},
-	
+
 	["increment arcotan ratio"] = {},
 	["decrement arcotan ratio"] = {},
-	
+
 	["increment arcotan displacement"] = {},
 	["decrement arcotan displacement"] = {},
-	
+
 	["increment arcotan length"] = {},
 	["decrement arcotan length"] = {},
-	
+
 	["increment arcotan start frame"] = {},
 	["decrement arcotan start frame"] = {},
-	
+
 	["increment arcotan step"] = {},
 	["decrement arcotan step"] = {},
 
@@ -91,7 +92,8 @@ Settings.Themes = {
 			Stick = "#0000FF",
 			Dot = "#FF0000", -- end of the joystick
 		},
-		InputField = { -- where you enter the facing angle or mag
+		InputField = {
+			-- where you enter the facing angle or mag
 			--EditingText = "#000000", -- optional, defaults to Theme.Text
 			Editing = "#FFFF00",
 			Enabled = "#FFFFFF",
@@ -100,7 +102,8 @@ Settings.Themes = {
 			Outline = "#888888" -- inner (creates depth)
 		}
 	},
-	Dark = { -- Theme by ShadoXFM
+	Dark = {
+		-- Theme by ShadoXFM
 		Text = "#FFFFFF",
 		ReadWriteText = "#FF0000",
 		Background = "#222222",
@@ -132,7 +135,8 @@ Settings.Themes = {
 			Outline = "#888888"
 		}
 	},
-	IcyBlue = { -- Theme by Manama
+	IcyBlue = {
+		-- Theme by Manama
 		Text = "#000000",
 		ReadWriteText = "#FFFFFF",
 		Background = "#757a9c",
@@ -162,7 +166,8 @@ Settings.Themes = {
 			Outline = "#888888"
 		}
 	},
-	CustomDark = { -- Theme by tjk
+	CustomDark = {
+		-- Theme by tjk
 		Text = "#FFFFFF",
 		ReadWriteText = "#05DDE2",
 		Background = "#222222",
@@ -194,7 +199,8 @@ Settings.Themes = {
 			Outline = "#888888"
 		}
 	},
-	MidnightPurple = { -- Theme by tjk
+	MidnightPurple = {
+		-- Theme by tjk
 		Text = "#FFFFFF",
 		ReadWriteText = "#ed02e9",
 		Background = "#361e35",
@@ -233,20 +239,20 @@ Settings.Theme = Settings.Themes.Light -- default
 Settings.Layout = {
 	Button = {
 		items = { -- spaces are used to adjust text placement
-			'Disabled  ',
-			'Match Yaw  ',
-			'Match Angle ',
+			'Disabled',
+			'Match Yaw',
+			'Match Angle',
 			'Reverse Angle',
-			'    Speedkick',
-			'Reset Mag ',
-			'Swim ',
+			'Speedkick',
+			'Reset Mag',
+			'Swim',
 			'ignore Y',
 			'.99',
-			'Always ',
+			'Always',
 			'Left',
 			'Right',
-			'Dyaw ',
-			'  get dist moved',
+			'Dyaw',
+			'get dist moved',
 			'AtanStrain',
 			'+',
 			'-',
@@ -259,9 +265,9 @@ Settings.Layout = {
 			'+',
 			'-',
 			'I',
-			'High Mag ',
-			'Set RNG  ',
-			'V ',
+			'High Mag',
+			'Set RNG',
+			'V',
 			'I',
 			'Record Ghost'
 		},
@@ -332,7 +338,7 @@ Settings.Layout = {
 		swimming = false
 	},
 	TextArea = {
-		items = {'Match Angle', 'Magnitude', 'RNG'},
+		items = { 'Match Angle', 'Magnitude', 'RNG' },
 		selectedItem = 0,
 		selectedChar = 1,
 		blinkTimer = 0,

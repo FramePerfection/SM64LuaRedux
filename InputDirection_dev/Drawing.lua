@@ -30,27 +30,34 @@ end
 
 function Drawing.paint()
 	Drawing.setColor(Settings.Theme.Background)
-	local rect = {x = Drawing.Screen.Width, y = Drawing.Screen.Height,
-		width = Drawing.WIDTH_OFFSET, height = 20}
+	local rect = {
+		x = Drawing.Screen.Width,
+		y = Drawing.Screen.Height,
+		width = Drawing.WIDTH_OFFSET,
+		height = 20
+	}
 	d2d.fill_rectangle(rect, Drawing.curColor)
 	Drawing.rect(Drawing.Screen.Width, Drawing.Screen.Height,
 		Drawing.Screen.Width + Drawing.WIDTH_OFFSET, Drawing.Screen.Height - 20)
 	for i = 1, table.getn(Buttons), 1 do
 		if Buttons[i].type == ButtonType.button then
 			if Buttons[i].name == "record ghost" then
-				Drawing.drawButton(Buttons[i].box[1], Buttons[i].box[2], Buttons[i].box[3], Buttons[i].box[4], Buttons.getGhostButtonText(), Buttons[i].pressed())
+				Drawing.drawButton(Buttons[i].box[1], Buttons[i].box[2], Buttons[i].box[3], Buttons[i].box[4],
+					Buttons.getGhostButtonText(), Buttons[i].pressed())
 			else
-				Drawing.drawButton(Buttons[i].box[1], Buttons[i].box[2], Buttons[i].box[3], Buttons[i].box[4], Buttons[i].text, Buttons[i].pressed())
+				Drawing.drawButton(Buttons[i].box[1], Buttons[i].box[2], Buttons[i].box[3], Buttons[i].box[4],
+					Buttons[i].text, Buttons[i].pressed())
 			end
 		elseif Buttons[i].type == ButtonType.textArea then
 			local value = Buttons[i].value()
-			Drawing.drawTextArea(Buttons[i].box[1], Buttons[i].box[2], Buttons[i].box[3], Buttons[i].box[4], value and string.format("%0".. tostring(Buttons[i].inputSize) .."d", value) or string.rep('-', Buttons[i].inputSize), Buttons[i].enabled(), Buttons[i].editing())
+			Drawing.drawTextArea(Buttons[i].box[1], Buttons[i].box[2], Buttons[i].box[3], Buttons[i].box[4],
+				value and string.format("%0" .. tostring(Buttons[i].inputSize) .. "d", value) or
+				string.rep('-', Buttons[i].inputSize), Buttons[i].enabled(), Buttons[i].editing())
 		end
 	end
 	Drawing.drawAnalogStick(Drawing.Screen.Width + Drawing.WIDTH_OFFSET / 3, 210)
 	Drawing.setColor(Settings.Theme.Text)
 	Drawing.setFont("Arial", 10, 0)
-	-- wgui.text(Drawing.Screen.Width + 149, 146, "Magnitude")
 	Drawing.text(Drawing.Screen.Width + 149, 146, "Magnitude")
 	Memory.Refresh()
 	Drawing.drawAngles(Drawing.Screen.Width + 16, 280)
@@ -61,37 +68,63 @@ function Drawing.drawAngles(x, y)
 	if Settings.ShowEffectiveAngles then
 		Drawing.text(x, y, "Yaw (Facing): " .. Engine.getEffectiveAngle(Memory.Mario.FacingYaw))
 		Drawing.text(x, y + 15, "Yaw (Intended): " .. Engine.getEffectiveAngle(Memory.Mario.IntendedYaw))
-		Drawing.text(x + 132, y, "O: " ..  (Engine.getEffectiveAngle(Memory.Mario.FacingYaw) + 32768) % 65536)--Drawing.text(x, y + 30, "Opposite (Facing): " ..  (Engine.getEffectiveAngle(Memory.Mario.FacingYaw) + 32768) % 65536)
-		Drawing.text(x + 132, y + 15, "O: " ..  (Engine.getEffectiveAngle(Memory.Mario.IntendedYaw) + 32768) % 65536)--Drawing.text(x, y + 45, "Opposite (Intended): " ..  (Engine.getEffectiveAngle(Memory.Mario.IntendedYaw) + 32768) % 65536)
+		Drawing.text(x + 132, y, "O: " .. (Engine.getEffectiveAngle(Memory.Mario.FacingYaw) + 32768) % 65536)  --Drawing.text(x, y + 30, "Opposite (Facing): " ..  (Engine.getEffectiveAngle(Memory.Mario.FacingYaw) + 32768) % 65536)
+		Drawing.text(x + 132, y + 15, "O: " .. (Engine.getEffectiveAngle(Memory.Mario.IntendedYaw) + 32768) % 65536) --Drawing.text(x, y + 45, "Opposite (Intended): " ..  (Engine.getEffectiveAngle(Memory.Mario.IntendedYaw) + 32768) % 65536)
 	else
 		Drawing.text(x, y, "Yaw (Facing): " .. Memory.Mario.FacingYaw)
 		Drawing.text(x, y + 15, "Yaw (Intended): " .. Memory.Mario.IntendedYaw)
-		Drawing.text(x + 132, y, "O: " ..  (Memory.Mario.FacingYaw + 32768) % 65536) --Drawing.text(x + 45, y, "Opposite (Facing): " ..  (Memory.Mario.FacingYaw + 32768) % 65536)
-		Drawing.text(x + 132, y + 15, "O: " ..  (Memory.Mario.IntendedYaw + 32768) % 65536)--Drawing.text(x, y + 45, "Opposite (Intended): " ..  (Memory.Mario.IntendedYaw + 32768) % 65536)
+		Drawing.text(x + 132, y, "O: " .. (Memory.Mario.FacingYaw + 32768) % 65536)  --Drawing.text(x + 45, y, "Opposite (Facing): " ..  (Memory.Mario.FacingYaw + 32768) % 65536)
+		Drawing.text(x + 132, y + 15, "O: " .. (Memory.Mario.IntendedYaw + 32768) % 65536) --Drawing.text(x, y + 45, "Opposite (Intended): " ..  (Memory.Mario.IntendedYaw + 32768) % 65536)
 	end
 end
 
 function Drawing.drawButton(x, y, width, length, text, pressed)
-	-- wgui.setbrush(Settings.Theme.Button.Outline)
-	-- wgui.setpen(Settings.Theme.Button.Outline)
-	Drawing.setColor(Settings.Theme.Button.Outline)
-	-- wgui.rect(x + 1, y + 1, x + width + 1, y + length + 1)
-	Drawing.rect(x + 1, y + 1, x + width + 1, y + length + 1)
-	if (pressed) then Drawing.setColor(Settings.Theme.Button.Pressed.Top) else Drawing.setColor(Settings.Theme.Button.Top) end
-	--if (pressed) then wgui.setpen("#FF8888") else wgui.setpen("#888888") end
-	Drawing.rect(x, y, x + width, y + length)
-	if (pressed) then Drawing.setColor(Settings.Theme.Button.Pressed.Bottom) else Drawing.setColor(Settings.Theme.Button.Bottom) end
-	-- if (pressed) then wgui.setpen(Settings.Theme.Button.Pressed.Bottom) else wgui.setpen(Settings.Theme.Button.Bottom) end
-	Drawing.rect(x+1, y+1 + length/2, x-1 + width, y-1 + length)
+	local rect = {
+		x = x,
+		y = y,
+		width = width,
+		height = length,
+	}
+	d2d.fill_rectangle(BreitbandGraphics.inflate_rectangle(rect, 1),
+		BreitbandGraphics.hex_to_color(Settings.Theme.Button.Outline))
+
+	local color
+
 	if (pressed) then
-		Drawing.setColor(Settings.Theme.Button.InvertedText)
-	elseif (Settings.Theme.Button.Text) then
-		Drawing.setColor(Settings.Theme.Button.Text)
+		color = Settings.Theme.Button.Pressed.Top
 	else
-		Drawing.setColor(Settings.Theme.Text)
+		color = Settings.Theme.Button.Top
 	end
-	Drawing.setFont("Arial", 10, 0)
-	Drawing.text(x + width/1.5 - 4.5 * string.len(text), y + length/2 - 7.5, text)
+
+	d2d.fill_rectangle({
+			x = rect.x,
+			y = rect.y,
+			width = rect.width,
+			height = rect.height / 2,
+		},
+		BreitbandGraphics.hex_to_color(color))
+
+	if (pressed) then
+		color = Settings.Theme.Button.Pressed.Bottom
+	else
+		color = Settings.Theme.Button.Bottom
+	end
+
+	d2d.fill_rectangle({
+			x = rect.x,
+			y = rect.y + rect.height / 2,
+			width = rect.width,
+			height = rect.height / 2,
+		},
+		BreitbandGraphics.hex_to_color(color))
+
+	if pressed then
+		color = Settings.Theme.Button.InvertedText
+	else
+		color = Settings.Theme.Text
+	end
+	d2d.draw_text(rect, 'center', 'center', {}, BreitbandGraphics.hex_to_color(color), 12,
+		"Arial", text)
 end
 
 function Drawing.drawTextArea(x, y, width, length, text, enabled, editing)
@@ -106,45 +139,55 @@ function Drawing.drawTextArea(x, y, width, length, text, enabled, editing)
 		Drawing.setColor(Settings.Theme.InputField.Disabled)
 	end
 	Drawing.setColor(Settings.Theme.InputField.OutsideOutline)
-	d2d.draw_rectangle({x = x + 1, y = y + 1, width = x + width + 1, height = y + length + 1}, Drawing.curColor, 1)
+	d2d.draw_rectangle({ x = x + 1, y = y + 1, width = x + width + 1, height = y + length + 1 }, Drawing.curColor, 1)
 	Drawing.setColor(Settings.Theme.InputField.Outline)
-	Drawing.line({x = x+2, y = y+2}, {x = x+2, y = y+length})
-	Drawing.line({x = x+2, y = y+2}, {x = x+width, y = y+2})
+	Drawing.line({ x = x + 2, y = y + 2 }, { x = x + 2, y = y + length })
+	Drawing.line({ x = x + 2, y = y + 2 }, { x = x + width, y = y + 2 })
 	if (editing) then
 		if (Settings.Theme.InputField.EditingText) then wgui.setcolor(Settings.Theme.InputField.EditingText) end
 		selectedChar = Settings.Layout.TextArea.selectedChar
-		Settings.Layout.TextArea.blinkTimer = (Settings.Layout.TextArea.blinkTimer + 1) % Settings.Layout.TextArea.blinkRate
+		Settings.Layout.TextArea.blinkTimer = (Settings.Layout.TextArea.blinkTimer + 1) %
+			Settings.Layout.TextArea.blinkRate
 		if (Settings.Layout.TextArea.blinkTimer == 0) then
 			Settings.Layout.TextArea.showUnderscore = not Settings.Layout.TextArea.showUnderscore
 		end
 		if (Settings.Layout.TextArea.showUnderscore) then
-			text = string.sub(text,1, selectedChar - 1) .. "_" .. string.sub(text, selectedChar + 1, string.len(text))
+			text = string.sub(text, 1, selectedChar - 1) .. "_" .. string.sub(text, selectedChar + 1, string.len(text))
 		end
 	end
-	Drawing.text(x + width/2 - 6.5 * string.len(text), y + length/2 - 8, text)
+	Drawing.text(x + width / 2 - 6.5 * string.len(text), y + length / 2 - 8, text)
 end
 
 function Drawing.drawAnalogStick(x, y)
 	Drawing.setColor(Settings.Theme.Joystick.Crosshair)
-	d2d.draw_rectangle({x = x-64, y = y-64, width = x+64, height = y+64},
-		Drawing.curColor, 1)
 	Drawing.setColor(Settings.Theme.Joystick.Background)
-	Drawing.rect(x-64,y-64,x+64,y+64)
+	Drawing.rect(x - 64, y - 64, x + 64, y + 64)
 	Drawing.setColor(Settings.Theme.Joystick.Circle)
-	local float_color = d2d.color_to_float(Drawing.curColor)
-	d2d.draw_ellipse({x = x-64, y = y-64, width = 128, height = 128}, Drawing.curColor, 1)
-	if Settings.goalMag and Settings.goalMag < 127 then
-		Drawing.setColor(Settings.Theme.Joystick.MagBoundary)
-		local r = Settings.goalMag + 6
-		d2d.fill_ellipse({x = x-r/2, y = y-r/2, width = x+r/2, height = y+r/2}, Drawing.curColor)
-	end
-	Drawing.line({x = x-64, y = y}, {x = x+64, y = y})
-	Drawing.line({x = x, y = y-64}, {x = x, y = y+64})
-	Drawing.setColor(Settings.Theme.Joystick.Stick)
-	Drawing.line({x = x, y = y}, {x = x + Joypad.input.X/2, y = y - Joypad.input.Y/2})
-	Drawing.setColor(Settings.Theme.Joystick.Dot)
-	d2d.fill_ellipse({x = x-4 + Joypad.input.X/2, y = y-4 - Joypad.input.Y/2, width = 4 + Joypad.input.X/2,
-		height = 4 - Joypad.input.Y/2}, Drawing.curColor)
+
+	Mupen_lua_ugui.renderer = BreitbandGraphics.renderers.d2d
+	Mupen_lua_ugui.stylers.windows_10.draw_joystick({
+		rectangle = {
+			x = x - 64,
+			y = y - 64,
+			width = 128,
+			height = 128,
+		},
+		position = {
+			x = (Joypad.input.X - (-128)) / (127 - (-128)),
+			y = (-Joypad.input.Y - (-127)) / (128 - (-127)),
+		}
+	})
+	d2d.draw_ellipse(
+		{
+			x = x - Settings.goalMag / 2,
+			y = y - Settings.goalMag / 2,
+			width = Settings.goalMag,
+			height = Settings.goalMag,
+		},
+		BreitbandGraphics.colors.red,
+		1
+	)
+
 	Drawing.setColor(Settings.Theme.Text)
 	Drawing.setFont("Courier", 10, 0)
 	local stick_y = Joypad.input.Y == 0 and "0" or -Joypad.input.Y
@@ -184,8 +227,8 @@ function Drawing.drawMiscData(x, y)
 	Drawing.text(x + 132, y + 105, "S: " .. MoreMaths.Round(Settings.Layout.Button.strain_button.arctanstart + 1, 2))
 
 	Drawing.text(x, y + 136, "Read-write: ")
-	if emu.isreadonly() then 
-		readwritestatus = "disabled" 
+	if emu.isreadonly() then
+		readwritestatus = "disabled"
 		Drawing.setColor(Settings.Theme.Text)
 	else
 		readwritestatus = "enabled"
@@ -211,9 +254,9 @@ function Drawing.setColor(hexStr)
 end
 
 function Drawing.setFont(fontName, fontSize, fontStyle)
-	Drawing.curFont = fontName
-	Drawing.curFontSize = fontSize
-	Drawing.curFontStyle = fontStyle
+	-- Drawing.curFont = fontName
+	-- Drawing.curFontSize = fontSize
+	-- Drawing.curFontStyle = fontStyle
 end
 
 function Drawing.text(x, y, text)
@@ -221,16 +264,16 @@ function Drawing.text(x, y, text)
 	-- local float_color = d2d.color_to_float(Drawing.curColor)
 	-- wgui.d2d_draw_text(x, y, x + 100, y + 100, float_color.r, float_color.g, float_color.b,
 	-- 	1.0, text, Drawing.curFont, Drawing.curFontSize, Drawing.curFontStyle, 0, 0)
-	d2d.draw_text({x=x, y=y, height=150, width=150}, 'start', 'start', Drawing.curColor,
-		Drawing.curFontSize, Drawing.curFont, Drawing.curFontStyle, text)
+	-- d2d.draw_text({ x = x, y = y, height = 150, width = 150 }, 'start', 'start', {}, Drawing.curColor,
+	-- 	Drawing.curFontSize, Drawing.curFont, text)
 end
 
 function Drawing.rect(x, y, height, width)
 	local float_color = d2d.color_to_float(Drawing.curColor)
 	-- wgui.d2d_fill_rectangle(x, y, x2, y2, float_color.r, float_color.g, float_color.b, 1.0)
-	d2d.fill_rectangle({x=x, y=y, height=height, width=width}, Drawing.curColor)
+	-- d2d.fill_rectangle({ x = x, y = y, height = height, width = width }, Drawing.curColor)
 end
 
 function Drawing.line(from, to)
-	d2d.draw_line(from, to, Drawing.curColor, 1)
+	-- d2d.draw_line(from, to, Drawing.curColor, 1)
 end

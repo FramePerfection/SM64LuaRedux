@@ -29,16 +29,17 @@ function Drawing.UnResizeScreen()
 end
 
 function Drawing.paint()
-	Drawing.setColor(Settings.Theme.Background)
-	local rect = {
+	BreitbandGraphics.renderers.d2d.fill_rectangle({
 		x = Drawing.Screen.Width,
-		y = Drawing.Screen.Height,
+		y = 0,
 		width = Drawing.WIDTH_OFFSET,
-		height = 20
-	}
-	d2d.fill_rectangle(rect, Drawing.curColor)
-	Drawing.rect(Drawing.Screen.Width, Drawing.Screen.Height,
-		Drawing.Screen.Width + Drawing.WIDTH_OFFSET, Drawing.Screen.Height - 20)
+		height = Drawing.Screen.Height
+	}, {
+		r = 253,
+		g = 253,
+		b = 253
+	})
+
 	for i = 1, table.getn(Buttons), 1 do
 		if Buttons[i].type == ButtonType.button then
 			if Buttons[i].name == "record ghost" then
@@ -128,34 +129,46 @@ function Drawing.drawButton(x, y, width, length, text, pressed)
 end
 
 function Drawing.drawTextArea(x, y, width, length, text, enabled, editing)
-	Drawing.setColor(Settings.Theme.Text)
-	Drawing.setFont("Courier", 16, 1)
-	if (editing) then
-		Drawing.setColor(Settings.Theme.InputField.Editing)
-		-- if (Settings.Theme.InputField.EditingText) then wgui.setcolor(Settings.Theme.InputField.EditingText) end
-	elseif (enabled) then
-		Drawing.setColor(Settings.Theme.InputField.Enabled)
-	else
-		Drawing.setColor(Settings.Theme.InputField.Disabled)
-	end
-	Drawing.setColor(Settings.Theme.InputField.OutsideOutline)
-	d2d.draw_rectangle({ x = x + 1, y = y + 1, width = x + width + 1, height = y + length + 1 }, Drawing.curColor, 1)
-	Drawing.setColor(Settings.Theme.InputField.Outline)
-	Drawing.line({ x = x + 2, y = y + 2 }, { x = x + 2, y = y + length })
-	Drawing.line({ x = x + 2, y = y + 2 }, { x = x + width, y = y + 2 })
-	if (editing) then
-		if (Settings.Theme.InputField.EditingText) then wgui.setcolor(Settings.Theme.InputField.EditingText) end
-		selectedChar = Settings.Layout.TextArea.selectedChar
-		Settings.Layout.TextArea.blinkTimer = (Settings.Layout.TextArea.blinkTimer + 1) %
-			Settings.Layout.TextArea.blinkRate
-		if (Settings.Layout.TextArea.blinkTimer == 0) then
-			Settings.Layout.TextArea.showUnderscore = not Settings.Layout.TextArea.showUnderscore
-		end
-		if (Settings.Layout.TextArea.showUnderscore) then
-			text = string.sub(text, 1, selectedChar - 1) .. "_" .. string.sub(text, selectedChar + 1, string.len(text))
-		end
-	end
-	Drawing.text(x + width / 2 - 6.5 * string.len(text), y + length / 2 - 8, text)
+	text = Mupen_lua_ugui.textbox({
+		uid = x + y + width + length, -- quick and dirty "hash" to ensure UID
+		is_enabled = enabled,
+		rectangle = {
+			x = x,
+			y = y,
+			width = width,
+			height = length,
+		},
+		text = text,
+	})
+
+	-- Drawing.setColor(Settings.Theme.Text)
+	-- Drawing.setFont("Courier", 16, 1)
+	-- if (editing) then
+	-- 	Drawing.setColor(Settings.Theme.InputField.Editing)
+	-- 	-- if (Settings.Theme.InputField.EditingText) then wgui.setcolor(Settings.Theme.InputField.EditingText) end
+	-- elseif (enabled) then
+	-- 	Drawing.setColor(Settings.Theme.InputField.Enabled)
+	-- else
+	-- 	Drawing.setColor(Settings.Theme.InputField.Disabled)
+	-- end
+	-- Drawing.setColor(Settings.Theme.InputField.OutsideOutline)
+	-- d2d.draw_rectangle({ x = x + 1, y = y + 1, width = x + width + 1, height = y + length + 1 }, Drawing.curColor, 1)
+	-- Drawing.setColor(Settings.Theme.InputField.Outline)
+	-- Drawing.line({ x = x + 2, y = y + 2 }, { x = x + 2, y = y + length })
+	-- Drawing.line({ x = x + 2, y = y + 2 }, { x = x + width, y = y + 2 })
+	-- if (editing) then
+	-- 	if (Settings.Theme.InputField.EditingText) then wgui.setcolor(Settings.Theme.InputField.EditingText) end
+	-- 	selectedChar = Settings.Layout.TextArea.selectedChar
+	-- 	Settings.Layout.TextArea.blinkTimer = (Settings.Layout.TextArea.blinkTimer + 1) %
+	-- 		Settings.Layout.TextArea.blinkRate
+	-- 	if (Settings.Layout.TextArea.blinkTimer == 0) then
+	-- 		Settings.Layout.TextArea.showUnderscore = not Settings.Layout.TextArea.showUnderscore
+	-- 	end
+	-- 	if (Settings.Layout.TextArea.showUnderscore) then
+	-- 		text = string.sub(text, 1, selectedChar - 1) .. "_" .. string.sub(text, selectedChar + 1, string.len(text))
+	-- 	end
+	-- end
+	-- Drawing.text(x + width / 2 - 6.5 * string.len(text), y + length / 2 - 8, text)
 end
 
 function Drawing.drawAnalogStick(x, y)
@@ -260,12 +273,13 @@ function Drawing.setFont(fontName, fontSize, fontStyle)
 end
 
 function Drawing.text(x, y, text)
-	-- are these values enough for most text?
-	-- local float_color = d2d.color_to_float(Drawing.curColor)
-	-- wgui.d2d_draw_text(x, y, x + 100, y + 100, float_color.r, float_color.g, float_color.b,
-	-- 	1.0, text, Drawing.curFont, Drawing.curFontSize, Drawing.curFontStyle, 0, 0)
-	-- d2d.draw_text({ x = x, y = y, height = 150, width = 150 }, 'start', 'start', {}, Drawing.curColor,
-	-- 	Drawing.curFontSize, Drawing.curFont, text)
+	local size = d2d.get_text_size(text, 11, "MS Sans Serif")
+	d2d.draw_text({
+		x = x,
+		y = y,
+		width = 999999999999, -- emulate old behaviour (nowrap)
+		height = size.height
+	}, "start", "center", {}, BreitbandGraphics.colors.black, 11, "MS Sans Serif", text)
 end
 
 function Drawing.rect(x, y, height, width)

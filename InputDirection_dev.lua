@@ -40,7 +40,7 @@ function main()
 	Program.rngSetter()
 	Joypad.send()
 	Swimming.swim("A")
-
+	Memory.Refresh()
 	if recording_ghost then
 		Ghost.main()
 	end

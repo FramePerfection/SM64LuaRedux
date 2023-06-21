@@ -1,7 +1,7 @@
 ButtonType = {
 	button = 0,
-		-- text : button text
-		-- box : total size of the button
+	-- text : button text
+	-- box : total size of the button
 	textArea = 1
 }
 
@@ -237,7 +237,8 @@ Buttons = {
 			return Settings.Layout.Button.strain_button.controls == true
 		end,
 		onclick = function(self)
-			Settings.Layout.Button.strain_button.arctanr = Settings.Layout.Button.strain_button.arctanr + 10 ^ Settings.Layout.Button.strain_button.arctanexp
+			Settings.Layout.Button.strain_button.arctanr = Settings.Layout.Button.strain_button.arctanr +
+				10 ^ Settings.Layout.Button.strain_button.arctanexp
 		end
 	},
 	{
@@ -257,7 +258,8 @@ Buttons = {
 			return Settings.Layout.Button.strain_button.controls == true
 		end,
 		onclick = function(self)
-			Settings.Layout.Button.strain_button.arctanr = Settings.Layout.Button.strain_button.arctanr - 10 ^ Settings.Layout.Button.strain_button.arctanexp
+			Settings.Layout.Button.strain_button.arctanr = Settings.Layout.Button.strain_button.arctanr -
+				10 ^ Settings.Layout.Button.strain_button.arctanexp
 		end
 	},
 	{
@@ -277,7 +279,8 @@ Buttons = {
 			return Settings.Layout.Button.strain_button.controls == true
 		end,
 		onclick = function(self)
-			Settings.Layout.Button.strain_button.arctand = Settings.Layout.Button.strain_button.arctand + 10 ^ Settings.Layout.Button.strain_button.arctanexp
+			Settings.Layout.Button.strain_button.arctand = Settings.Layout.Button.strain_button.arctand +
+				10 ^ Settings.Layout.Button.strain_button.arctanexp
 		end
 	},
 	{
@@ -297,7 +300,8 @@ Buttons = {
 			return Settings.Layout.Button.strain_button.controls == true
 		end,
 		onclick = function(self)
-			Settings.Layout.Button.strain_button.arctand = Settings.Layout.Button.strain_button.arctand - 10 ^ Settings.Layout.Button.strain_button.arctanexp
+			Settings.Layout.Button.strain_button.arctand = Settings.Layout.Button.strain_button.arctand -
+				10 ^ Settings.Layout.Button.strain_button.arctanexp
 		end
 	},
 	{
@@ -317,7 +321,10 @@ Buttons = {
 			return Settings.Layout.Button.strain_button.controls == true
 		end,
 		onclick = function(self)
-			Settings.Layout.Button.strain_button.arctann = MoreMaths.Round(math.max(0,Settings.Layout.Button.strain_button.arctann + 10 ^ math.max(-0.6020599913279624,Settings.Layout.Button.strain_button.arctanexp)), 2)
+			Settings.Layout.Button.strain_button.arctann = MoreMaths.Round(
+				math.max(0,
+					Settings.Layout.Button.strain_button.arctann +
+					10 ^ math.max(-0.6020599913279624, Settings.Layout.Button.strain_button.arctanexp)), 2)
 		end
 	},
 	{
@@ -337,7 +344,10 @@ Buttons = {
 			return Settings.Layout.Button.strain_button.controls == true
 		end,
 		onclick = function(self)
-			Settings.Layout.Button.strain_button.arctann = MoreMaths.Round(math.max(0,Settings.Layout.Button.strain_button.arctann - 10 ^ math.max(-0.6020599913279624,Settings.Layout.Button.strain_button.arctanexp)), 2)
+			Settings.Layout.Button.strain_button.arctann = MoreMaths.Round(
+				math.max(0,
+					Settings.Layout.Button.strain_button.arctann -
+					10 ^ math.max(-0.6020599913279624, Settings.Layout.Button.strain_button.arctanexp)), 2)
 		end
 	},
 	{
@@ -357,7 +367,9 @@ Buttons = {
 			return Settings.Layout.Button.strain_button.controls == true
 		end,
 		onclick = function(self)
-			Settings.Layout.Button.strain_button.arctanstart = math.max(0,Settings.Layout.Button.strain_button.arctanstart + 10 ^ math.max(0,Settings.Layout.Button.strain_button.arctanexp))
+			Settings.Layout.Button.strain_button.arctanstart = math.max(0,
+				Settings.Layout.Button.strain_button.arctanstart +
+				10 ^ math.max(0, Settings.Layout.Button.strain_button.arctanexp))
 		end
 	},
 	{
@@ -377,7 +389,9 @@ Buttons = {
 			return Settings.Layout.Button.strain_button.controls == true
 		end,
 		onclick = function(self)
-			Settings.Layout.Button.strain_button.arctanstart = math.max(0,Settings.Layout.Button.strain_button.arctanstart - 10 ^ math.max(0,Settings.Layout.Button.strain_button.arctanexp))
+			Settings.Layout.Button.strain_button.arctanstart = math.max(0,
+				Settings.Layout.Button.strain_button.arctanstart -
+				10 ^ math.max(0, Settings.Layout.Button.strain_button.arctanexp))
 		end
 	},
 	{
@@ -397,7 +411,8 @@ Buttons = {
 			return Settings.Layout.Button.strain_button.controls == true
 		end,
 		onclick = function(self)
-			Settings.Layout.Button.strain_button.arctanexp = math.max(-4, math.min(Settings.Layout.Button.strain_button.arctanexp + 1, 4))
+			Settings.Layout.Button.strain_button.arctanexp = math.max(-4,
+				math.min(Settings.Layout.Button.strain_button.arctanexp + 1, 4))
 		end
 	},
 	{
@@ -417,7 +432,8 @@ Buttons = {
 			return Settings.Layout.Button.strain_button.controls == true
 		end,
 		onclick = function(self)
-			Settings.Layout.Button.strain_button.arctanexp = math.max(-4, math.min(Settings.Layout.Button.strain_button.arctanexp - 1, 4))
+			Settings.Layout.Button.strain_button.arctanexp = math.max(-4,
+				math.min(Settings.Layout.Button.strain_button.arctanexp - 1, 4))
 		end
 	},
 	{
@@ -558,8 +574,10 @@ Buttons = {
 			Settings.Layout.TextArea.showUnderscore = true
 		end,
 		onkeypress = function(self, key)
-			local oldkey = math.floor(Settings.goalAngle / math.pow(10, self.inputSize - Settings.Layout.TextArea.selectedChar)) % 10
-			Settings.goalAngle = Settings.goalAngle + (key - oldkey) * math.pow(10, self.inputSize - Settings.Layout.TextArea.selectedChar)
+			local oldkey = math.floor(Settings.goalAngle /
+				math.pow(10, self.inputSize - Settings.Layout.TextArea.selectedChar)) % 10
+			Settings.goalAngle = Settings.goalAngle +
+				(key - oldkey) * math.pow(10, self.inputSize - Settings.Layout.TextArea.selectedChar)
 			Settings.Layout.TextArea.selectedChar = Settings.Layout.TextArea.selectedChar + 1
 			if Settings.Layout.TextArea.selectedChar > self.inputSize then
 				Settings.Layout.TextArea.selectedItem = 0
@@ -621,7 +639,8 @@ Buttons = {
 		end,
 		onkeypress = function(self, key)
 			local goalMag = Settings.goalMag or 0
-			local oldkey = math.floor(goalMag / math.pow(10, self.inputSize - Settings.Layout.TextArea.selectedChar)) % 10
+			local oldkey = math.floor(goalMag / math.pow(10, self.inputSize - Settings.Layout.TextArea.selectedChar)) %
+				10
 			goalMag = goalMag + (key - oldkey) * math.pow(10, self.inputSize - Settings.Layout.TextArea.selectedChar)
 			Settings.Layout.TextArea.selectedChar = Settings.Layout.TextArea.selectedChar + 1
 			if Settings.Layout.TextArea.selectedChar > self.inputSize then

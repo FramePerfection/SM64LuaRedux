@@ -29,39 +29,96 @@ function Drawing.UnResizeScreen()
 end
 
 function Drawing.paint()
-	Drawing.setColor(Settings.Theme.Background)
-	local rect = {
+	BreitbandGraphics.renderers.d2d.fill_rectangle({
 		x = Drawing.Screen.Width,
-		y = Drawing.Screen.Height,
+		y = 0,
 		width = Drawing.WIDTH_OFFSET,
-		height = 20
-	}
-	d2d.fill_rectangle(rect, Drawing.curColor)
-	Drawing.rect(Drawing.Screen.Width, Drawing.Screen.Height,
-		Drawing.Screen.Width + Drawing.WIDTH_OFFSET, Drawing.Screen.Height - 20)
-	for i = 1, table.getn(Buttons), 1 do
+		height = Drawing.Screen.Height
+	}, {
+		r = 253,
+		g = 253,
+		b = 253
+	})
+
+	for i = 1, #Buttons, 1 do
 		if Buttons[i].type == ButtonType.button then
-			if Buttons[i].name == "record ghost" then
-				Drawing.drawButton(Buttons[i].box[1], Buttons[i].box[2], Buttons[i].box[3], Buttons[i].box[4],
-					Buttons.getGhostButtonText(), Buttons[i].pressed())
-			else
-				Drawing.drawButton(Buttons[i].box[1], Buttons[i].box[2], Buttons[i].box[3], Buttons[i].box[4],
-					Buttons[i].text, Buttons[i].pressed())
+			-- if Buttons[i].name == "record ghost" then
+			-- 	Drawing.drawButton(Buttons[i].box[1], Buttons[i].box[2], Buttons[i].box[3], Buttons[i].box[4],
+			-- 		Buttons.getGhostButtonText(), Buttons[i].pressed())
+			-- else
+			-- 	Drawing.drawButton(Buttons[i].box[1], Buttons[i].box[2], Buttons[i].box[3], Buttons[i].box[4],
+			-- 		Buttons[i].text, Buttons[i].pressed())
+			-- end
+			if Mupen_lua_ugui.button({
+					uid = i,
+					is_enabled = Buttons[i].enabled(),
+					rectangle = {
+						x = Buttons[i].box[1],
+						y = Buttons[i].box[2],
+						width = Buttons[i].box[3],
+						height = Buttons[i].box[4]
+					},
+					text = Buttons[i].name
+				}) then
+				Buttons[i].onclick(Buttons[i])
 			end
 		elseif Buttons[i].type == ButtonType.textArea then
-			local value = Buttons[i].value()
-			Drawing.drawTextArea(Buttons[i].box[1], Buttons[i].box[2], Buttons[i].box[3], Buttons[i].box[4],
-				value and string.format("%0" .. tostring(Buttons[i].inputSize) .. "d", value) or
-				string.rep('-', Buttons[i].inputSize), Buttons[i].enabled(), Buttons[i].editing())
+			Mupen_lua_ugui.textbox({
+				uid = i,
+				is_enabled = Buttons[i].enabled(),
+				rectangle = {
+					x = Buttons[i].box[1],
+					y = Buttons[i].box[2],
+					width = Buttons[i].box[3],
+					height = Buttons[i].box[4]
+				},
+				text = tostring(Buttons[i].value())
+			})
 		end
 	end
-	Drawing.drawAnalogStick(Drawing.Screen.Width + Drawing.WIDTH_OFFSET / 3, 210)
-	Drawing.setColor(Settings.Theme.Text)
-	Drawing.setFont("Arial", 10, 0)
-	Drawing.text(Drawing.Screen.Width + 149, 146, "Magnitude")
+
+	Mupen_lua_ugui.joystick({
+		uid = 9999,
+		is_enabled = true,
+		rectangle = {
+			x = Drawing.Screen.Width + 5,
+			y = 145,
+			width = 128,
+			height = 128
+		},
+		position = {
+			x = (Joypad.input.X - (-128)) / (127 - (-128)),
+			y = (-Joypad.input.Y - (-127)) / (128 - (-127)),
+		}
+	})
+
+	d2d.draw_ellipse(
+		{
+			x = (Drawing.Screen.Width + 5 + 64) - Settings.goalMag / 2,
+			y = (145 + 64) - Settings.goalMag / 2,
+			width = Settings.goalMag,
+			height = Settings.goalMag,
+		},
+		BreitbandGraphics.colors.red,
+		1
+	)
+
+	d2d.draw_text({
+		x = Drawing.Screen.Width + 5,
+		y = 145 + 128,
+		width = 64,
+		height = 15
+	}, 'start', 'center', {}, BreitbandGraphics.colors.black, 11, "MS Sans Serif", "X " .. Joypad.input.X)
+
+
+	d2d.draw_text({
+		x = Drawing.Screen.Width + 5 + 64,
+		y = 145 + 128,
+		width = 64,
+		height = 15
+	}, 'start', 'center', {}, BreitbandGraphics.colors.black, 11, "MS Sans Serif", "Y " .. -Joypad.input.Y)
+	Drawing.drawMiscData(Drawing.Screen.Width + 5, 310)
 	Memory.Refresh()
-	Drawing.drawAngles(Drawing.Screen.Width + 16, 280)
-	Drawing.drawMiscData(Drawing.Screen.Width + 16, 310)
 end
 
 function Drawing.drawAngles(x, y)
@@ -78,92 +135,7 @@ function Drawing.drawAngles(x, y)
 	end
 end
 
-function Drawing.drawButton(x, y, width, length, text, pressed)
-	local rect = {
-		x = x,
-		y = y,
-		width = width,
-		height = length,
-	}
-	d2d.fill_rectangle(BreitbandGraphics.inflate_rectangle(rect, 1),
-		BreitbandGraphics.hex_to_color(Settings.Theme.Button.Outline))
-
-	local color
-
-	if (pressed) then
-		color = Settings.Theme.Button.Pressed.Top
-	else
-		color = Settings.Theme.Button.Top
-	end
-
-	d2d.fill_rectangle({
-			x = rect.x,
-			y = rect.y,
-			width = rect.width,
-			height = rect.height / 2,
-		},
-		BreitbandGraphics.hex_to_color(color))
-
-	if (pressed) then
-		color = Settings.Theme.Button.Pressed.Bottom
-	else
-		color = Settings.Theme.Button.Bottom
-	end
-
-	d2d.fill_rectangle({
-			x = rect.x,
-			y = rect.y + rect.height / 2,
-			width = rect.width,
-			height = rect.height / 2,
-		},
-		BreitbandGraphics.hex_to_color(color))
-
-	if pressed then
-		color = Settings.Theme.Button.InvertedText
-	else
-		color = Settings.Theme.Text
-	end
-	d2d.draw_text(rect, 'center', 'center', {}, BreitbandGraphics.hex_to_color(color), 12,
-		"Arial", text)
-end
-
-function Drawing.drawTextArea(x, y, width, length, text, enabled, editing)
-	Drawing.setColor(Settings.Theme.Text)
-	Drawing.setFont("Courier", 16, 1)
-	if (editing) then
-		Drawing.setColor(Settings.Theme.InputField.Editing)
-		-- if (Settings.Theme.InputField.EditingText) then wgui.setcolor(Settings.Theme.InputField.EditingText) end
-	elseif (enabled) then
-		Drawing.setColor(Settings.Theme.InputField.Enabled)
-	else
-		Drawing.setColor(Settings.Theme.InputField.Disabled)
-	end
-	Drawing.setColor(Settings.Theme.InputField.OutsideOutline)
-	d2d.draw_rectangle({ x = x + 1, y = y + 1, width = x + width + 1, height = y + length + 1 }, Drawing.curColor, 1)
-	Drawing.setColor(Settings.Theme.InputField.Outline)
-	Drawing.line({ x = x + 2, y = y + 2 }, { x = x + 2, y = y + length })
-	Drawing.line({ x = x + 2, y = y + 2 }, { x = x + width, y = y + 2 })
-	if (editing) then
-		if (Settings.Theme.InputField.EditingText) then wgui.setcolor(Settings.Theme.InputField.EditingText) end
-		selectedChar = Settings.Layout.TextArea.selectedChar
-		Settings.Layout.TextArea.blinkTimer = (Settings.Layout.TextArea.blinkTimer + 1) %
-			Settings.Layout.TextArea.blinkRate
-		if (Settings.Layout.TextArea.blinkTimer == 0) then
-			Settings.Layout.TextArea.showUnderscore = not Settings.Layout.TextArea.showUnderscore
-		end
-		if (Settings.Layout.TextArea.showUnderscore) then
-			text = string.sub(text, 1, selectedChar - 1) .. "_" .. string.sub(text, selectedChar + 1, string.len(text))
-		end
-	end
-	Drawing.text(x + width / 2 - 6.5 * string.len(text), y + length / 2 - 8, text)
-end
-
 function Drawing.drawAnalogStick(x, y)
-	Drawing.setColor(Settings.Theme.Joystick.Crosshair)
-	Drawing.setColor(Settings.Theme.Joystick.Background)
-	Drawing.rect(x - 64, y - 64, x + 64, y + 64)
-	Drawing.setColor(Settings.Theme.Joystick.Circle)
-
 	Mupen_lua_ugui.renderer = BreitbandGraphics.renderers.d2d
 	Mupen_lua_ugui.stylers.windows_10.draw_joystick({
 		rectangle = {
@@ -187,12 +159,6 @@ function Drawing.drawAnalogStick(x, y)
 		BreitbandGraphics.colors.red,
 		1
 	)
-
-	Drawing.setColor(Settings.Theme.Text)
-	Drawing.setFont("Courier", 10, 0)
-	local stick_y = Joypad.input.Y == 0 and "0" or -Joypad.input.Y
-	Drawing.text(x + 90 - 2.5 * (string.len(stick_y)), y + 4, "y:" .. stick_y)
-	Drawing.text(x + 90 - 2.5 * (string.len(Joypad.input.X)), y - 14, "x:" .. Joypad.input.X)
 end
 
 function Drawing.drawMiscData(x, y)
@@ -260,12 +226,13 @@ function Drawing.setFont(fontName, fontSize, fontStyle)
 end
 
 function Drawing.text(x, y, text)
-	-- are these values enough for most text?
-	-- local float_color = d2d.color_to_float(Drawing.curColor)
-	-- wgui.d2d_draw_text(x, y, x + 100, y + 100, float_color.r, float_color.g, float_color.b,
-	-- 	1.0, text, Drawing.curFont, Drawing.curFontSize, Drawing.curFontStyle, 0, 0)
-	-- d2d.draw_text({ x = x, y = y, height = 150, width = 150 }, 'start', 'start', {}, Drawing.curColor,
-	-- 	Drawing.curFontSize, Drawing.curFont, text)
+	local size = d2d.get_text_size(text, 11, "MS Sans Serif")
+	d2d.draw_text({
+		x = x,
+		y = y,
+		width = 999999999999, -- emulate old behaviour (nowrap)
+		height = size.height
+	}, "start", "center", {}, BreitbandGraphics.colors.black, 11, "MS Sans Serif", text)
 end
 
 function Drawing.rect(x, y, height, width)
